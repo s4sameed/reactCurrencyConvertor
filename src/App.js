@@ -25,10 +25,11 @@ const App = () =>{
     }
 
     const fetchRates = () => {
-        fetch("https://api.exchangeratesapi.io/latest")
-        .then(res => res.json())
+        fetch("http://api.exchangeratesapi.io/v1/latest?access_key=968fd9ab880709607925700c3959b6aa&format=1")
+        .then((res) => (
+            res.json()
+        ))
         .then(data => {
-
             const firstCurrency = Object.keys(data.rates)[0];
             setCurrencyOptions([data.base, ...Object.keys(data.rates)]);
             setFromCurrency(data.base);
@@ -52,7 +53,7 @@ const App = () =>{
 
     useEffect(()=>{
         if(fromCurrency!=null && toCurrency!=null){
-            fetch(`https://api.exchangeratesapi.io/latest?base=${fromCurrency}&symbols=${toCurrency}`)
+            fetch(`http://api.exchangeratesapi.io/v1/latest?access_key=968fd9ab880709607925700c3959b6aa&format=1?base=${fromCurrency}&symbols=${toCurrency}`)
                 .then(res => res.json())
                 .then(data => setExchangeRate(data.rates[toCurrency]))
         }
@@ -66,7 +67,6 @@ const App = () =>{
     },[]);
 
 
-    
 
 
     return(
@@ -83,7 +83,10 @@ const App = () =>{
             <CurrencyInput
                 currencyOptions={currencyOptions}
                 selectedCurrency= {fromCurrency}
-                onChangeCurrency = {e => setFromCurrency(e.target.value)}
+                onChangeCurrency = {(e) =>{
+                    setFromCurrency(e.target.value);
+                    console.log(fromCurrency);
+                } }
                 amount = {fromAmount}
                 onChangeAmount = {handleFromAmountChange}
             />
@@ -93,7 +96,10 @@ const App = () =>{
             <CurrencyInput
                 currencyOptions={currencyOptions}  
                 selectedCurrency = {toCurrency}
-                onChangeCurrency = {e => setToCurrency(e.target.value)}
+                onChangeCurrency = {(e) =>{
+                    setToCurrency(e.target.value);
+                    console.log(toCurrency);
+                } }
                 amount = {toAmount}
                 onChangeAmount = {handleToAmountChange}
             />
